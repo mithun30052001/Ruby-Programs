@@ -3,9 +3,9 @@ $customer_count = 1
 $chocolate_money = 0
 
 def calculate_initial_amount(denominations)
-  denomination_array,denomination_array_index,total_amount = [1,2,5,5,10,10,20,50,100,200,500,2000],0,0
+  denomination_array, denomination_array_index, total_amount = [1,2,5,'5C',10,'10C',20,50,100,200,500,2000],0,0
   for denomination_count in (denominations.values)
-     total_amount += denomination_array[denomination_array_index] * denomination_count
+     total_amount += denomination_array[denomination_array_index] * denomination_count.to_i
      denomination_array_index += 1
   end
   total_amount
@@ -86,7 +86,7 @@ end
 
 def decide_coin_or_note(change_available_index,denominations)
   change_available_index = change_available_index + "C"
-      if (denominations[change_available_index] ==0 )
+      if (denominations[change_available_index] == 0)
         change_available_index = change_available_index[0..-2]
       end
   return change_available_index
@@ -109,71 +109,73 @@ def chocolate_case(total_balance,balance,denominations,denominations_hash_copy)
 end
 
 def validate_cashbox(denominations,selling_price)
-  isvalid = calculate_initial_amount(denominations) -  $final_amount == selling_price + $chocolate_money? true : false
+  isvalid = calculate_initial_amount(denominations) - $final_amount == selling_price + $chocolate_money? true : false
   $chocolate_money = 0
   return isvalid
 end
 
-#main method
-denominations = {
-  '1' => 0,
-  '2' => 0,
-  '5' => 0,
-  '5C' => 0,
-  '10' => 10,
-  '10C' => 0,
-  '20' => 0,
-  '50' => 0,
-  '100' => 0,
-  '200' => 0,
-  '500' => 0,
-  '2000' => 0
-}
-$final_amount = calculate_initial_amount(denominations)
-fixed_initial = $final_amount
-puts("The initial amount in the cash-box is")
-puts($final_amount)
-shop_closed =false
-sales_array=Array.new
-while !(shop_closed)
-  timeup=false
-  order_accepted = create_order()
-  if order_accepted
-    denominations_hash_copy = denominations.clone
-    selling_price,money_given=order_accepted[1],order_accepted[2]
-    denominations= create_transaction(denominations_hash_copy,denominations,selling_price,money_given)
-    if denominations != denominations_hash_copy
-      sales_array <<[selling_price,money_given,money_given-selling_price]
-      no_issue = validate_cashbox(denominations , selling_price)
-      if !(no_issue)
-        puts("Some issue in the cashbox ,checking please wait...........")
-        puts denominations
-        sales_array.pop
-      else
-        amount = calculate_initial_amount(denominations)
-        $initial_amount = $final_amount
-        $final_amount = amount
+def main()
+  denominations = {
+    '1' => 10,
+    '2' => 10,
+    '5' => 10,
+    '5C' => 10,
+    '10' => 10,
+    '10C' => 10,
+    '20' => 10,
+    '50' => 10,
+    '100' => 10,
+    '200' => 10,
+    '500' => 10,
+    '2000' => 10
+  }
+  $final_amount = calculate_initial_amount(denominations)
+  fixed_initial = $final_amount
+  puts("The initial amount in the cash-box is")
+  puts($final_amount)
+  shop_closed =false
+  sales_array=Array.new
+  while !(shop_closed)
+    timeup=false
+    order_accepted = create_order()
+    if order_accepted
+      denominations_hash_copy = denominations.clone
+      selling_price,money_given=order_accepted[1],order_accepted[2]
+      denominations= create_transaction(denominations_hash_copy,denominations,selling_price,money_given)
+      if denominations != denominations_hash_copy
+        sales_array <<[selling_price,money_given,money_given-selling_price]
+        no_issue = validate_cashbox(denominations , selling_price)
+        if !(no_issue)
+          puts("Some issue in the cashbox ,checking please wait...........")
+          puts denominations
+          sales_array.pop
+        else
+          amount = calculate_initial_amount(denominations)
+          $initial_amount = $final_amount
+          $final_amount = amount
+        end
       end
     end
+    puts("The cash-box denominations after this sale is")
+    puts denominations
+    puts "Do you want to continue"
+    close_status = gets.chomp()
+    if(close_status.casecmp?("no") || close_status.casecmp?("n") || close_status.casecmp?("0"))
+      timeup = true
+    end
+    if(timeup == true)
+      shop_closed = true
+    end
   end
-  puts("The cash-box denominations after this sale is")
-  puts denominations
-  puts "Do you want to continue"
-  close_status = gets.chomp()
-  if(close_status.casecmp?("no") || close_status.casecmp?("n") || close_status.casecmp?("0"))
-    timeup=true
-  end
-  if(timeup==true)
-    shop_closed = true
-  end
+  puts("The sales for each customer is")
+  puts(sales_array.inspect)
+  puts("The denominations count at the end of the day is")
+  puts(denominations)
+  puts("The final amount in hand for the shopkeeper is")
+  puts($final_amount)
+  puts("The income of the shopkeeper for the day is")
+  puts($final_amount - fixed_initial)
 end
 
-puts("The sales for each customer is")
-puts(sales_array.inspect)
-puts("The denominations count at the end of the day is")
-puts(denominations)
-puts("The final amount in hand for the shopkeeper is")
-puts($final_amount)
-puts("The income of the shopkeeper for the day is")
-puts($final_amount - fixed_initial)
+main()
 

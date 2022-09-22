@@ -1,8 +1,8 @@
-def iterate(tree_hash)
+def tree_swap(tree_hash)
+  tree_hash[:left],tree_hash[:right] = tree_hash[:right] , tree_hash[:left]
   tree_hash.each do |key,value|
     if value.is_a?(Hash)
       iterate(value)
-      value[:left],value[:right] = value[:right] , value[:left]
     end
   end
   return tree_hash
@@ -21,8 +21,5 @@ const_tree = {
       right: { value: 7 },
     },
   }
-  main_hash ={const_tree:}
- #const_tree[:left],const_tree[:right] = const_tree[:right] , const_tree[:left]
- puts(iterate(main_hash))
-
+puts(iterate(const_tree))
 

@@ -6,7 +6,7 @@ def swap_subtrees(tree_array,levels,left_start_index,right_start_index)
     power_of_two +=1
     right_start_index += (2 ** power_of_two)
   end
-  #puts tree_array.inspect
+ 
   return tree_array
 end
 

@@ -21,9 +21,8 @@ end
 puts("Enter the tree elements in the order of level order traversal:")
 tree_array=gets.chomp().split().map{|element| element}
 start_index,end_index,power_of_two = 1,2,1
-current_level,total_levels = 0,Math.log(tree_array.length,2).ceil
+current_level , total_levels = 0 , Math.log(tree_array.length,2).ceil
 while(current_level < total_levels-1)
-  puts start_index,end_index
   if(end_index >= tree_array.length)
     element_fill_count = end_index - (tree_array.length - 1)
     fill_array =Array.new(element_fill_count, "NIL")
