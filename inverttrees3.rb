@@ -21,5 +21,5 @@ const_tree = {
       right: { value: 7 },
     },
   }
-puts(iterate(const_tree))
+puts(tree_swap(const_tree))
 
